@@ -11,7 +11,7 @@ License: GPL2
 
 /*
 	Aliaster. This is a plugin to be displayed instead to another arbitrary strings of posts within. 
-	Copyright (C) 2014  fujitubo gekkai
+	Copyright (C) 2014 Gekkai
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -95,22 +95,22 @@ function aliaster_exec( $content ) {
 	}
 
 	// <p>
-	$out_c = aliaster_exec_proc_p($out_c);
+	$out_c = aliaster_exec_proc_parag($out_c);
 
 	// alias proc
 	return aliaster_exec_proc($out_c) . $add_form;
 }
 
-function aliaster_exec_proc_p( $content ) {
+function aliaster_exec_proc_parag( $content ) {
 	// alias proc
 	$out_c = preg_replace_callback(
 		"|(<p\s.*?>)(.+?)(<\/p>)|", 
-		"aliaster_search_p",
+		"aliaster_search_parag",
 		$content);
 	return $out_c;
 }
 
-function aliaster_search_p( $matches ) {
+function aliaster_search_parag( $matches ) {
 	global $aliaster_substitute;
 
     $alst_options = get_option('alst_options');
@@ -165,9 +165,10 @@ function aliaster_search( $matches ) {
 				case 'simple':
 					return $space . $matches[1] . aliaster_create_simple($matches[2], $items[2]) . $matches[3] . $space;
 				case 'table':
-					break;
+					return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
+				default:
+					return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
 			}
-			return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
 
 		} else {
 			return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
@@ -178,7 +179,9 @@ function aliaster_search( $matches ) {
 	}
 }
 
-
+/*
+ * create toggle form
+ */
 function aliaster_create_form($func) {
 	$alst_options = get_option('alst_options');
 	if (empty($alst_options['out_toggle'])) {
@@ -340,10 +343,8 @@ function aliaster_plugin_options() {
 		$dels = array('<', '>', '/', '\\');
 		$opt_val['style'] = str_replace($dels, '',  $tmp);
 		$opt_val['simple_char'] = htmlentities($_POST[ $filed_name['simple_char'] ], ENT_QUOTES, mb_internal_encoding());
-//		$opt_val['simple_char'] = $_POST[ $filed_name['simple_char'] ];
 		$opt_val['simple_num_char'] = htmlentities($_POST[ $filed_name['simple_num_char'] ], ENT_QUOTES, mb_internal_encoding());
 		$opt_val['simple_parag'] = htmlentities($_POST[ $filed_name['simple_parag'] ], ENT_QUOTES, mb_internal_encoding());
-//		$opt_val['simple_num_char'] = $_POST[ $filed_name['simple_num_char'] ];
 		$opt_val['search_disable'] = empty($_POST[ $filed_name['search_disable'] ]) ? 0 : 1;
 		$opt_val['out_toggle'] = empty($_POST[ $filed_name['out_toggle'] ]) ? 0 : 1;
 		$opt_val['out_space'] = empty($_POST[ $filed_name['out_space'] ]) ? 0 : 1;
@@ -351,7 +352,6 @@ function aliaster_plugin_options() {
 		// set dababase
 		update_option( $opt_name, $opt_val );
 		$update_rslt = __('Options saved.', 'aliaster_domain');
-//		$submit_disable = 'disabled';
 	}
 	if ($opt_val['search_disable'] == 1) {
 		$srearch_disable = 'checked="checked"';

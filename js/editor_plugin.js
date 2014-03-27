@@ -17,10 +17,10 @@
 		getInfo : function() {	
 			return {
 				longname : 'alias button',
-				author : 'fujitubo gekkai',
+				author : 'Gekkai',
 				authorurl : 'http://gekkai.org',
 				infourl : 'http://gekkai.org/aliaster/',
-				version : "0.1"
+				version : "0.5"
 			};
 		},
 		// urlは本スクリプトのurlが指定される
@@ -145,22 +145,6 @@
 						break;
 				}
 			});
-/*
-			ed.onActivate.add(function(ed) {
-				var node = ed.controlManager.get('als-new');
-				if (node) {
-					ed.selection.select(node);
-					node.setAttribute("id", "");
-				}
-			});
-			ed.onNodeChange.add(function(ed, cm,e) {
-				var node = ed.controlManager.get('als-new');
-				if (node) {
-					ed.selection.select(node);
-					node.setAttribute("id", "");
-				}
-			});
-*/
 		},
 		clearAlias : function(ed) {
 			var sel = ed.selection;
@@ -366,7 +350,7 @@
 				&& r.startContainer.parentNode != r.endContainer.parentNode
 				&& !r.commonAncestorContainer.nodeName.match(/^p$/i)
 			) {
-				// 複数行が選択されて場合（この条件で十分かは？？？）
+				// 複数行が選択されて場合
 				ed.controlManager.setDisabled('Alias', true);
 				ed.controlManager.setDisabled('AliasNum', true);
 				ed.controlManager.setDisabled('AliasTable', true);
@@ -412,10 +396,6 @@
 			}
 			return;
 		},
-
-		getText : function() {
-			return "tinymce.plugins.AliasButtons-JS";
-		}
 	});
 	tinymce.PluginManager.add('AliasButtons', tinymce.plugins.AliasButtons);
 })();
