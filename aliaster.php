@@ -82,7 +82,7 @@ function aliaster_exec( $content ) {
 		//if ($stat != 'draft' && is_single()) {
 		if (is_single() || is_page()) {
 			// not draft && single view : enable change form
-			if ($_POST["func"] != 1) {
+			if (!array_key_exists("func", $_POST) || $_POST["func"] != 1) {
 				return $content . aliaster_create_form(0);
 			} else {
 				$add_form = aliaster_create_form(1);
