@@ -302,7 +302,7 @@ add_filter( 'tiny_mce_before_init', 'custom_editor_settings' );
 add_filter( 'get_search_form', 'aliaster_serch_form' );
 
 function aliaster_plugin_menu() {
-	add_options_page('Aliaster Plugin Options', 'Aliaster', 8, __FILE__, 'aliaster_plugin_options');
+	add_options_page('Aliaster Plugin Options', 'Aliaster', 'level_8', __FILE__, 'aliaster_plugin_options');
 }
 
 function aliaster_plugin_options() {
