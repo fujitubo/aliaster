@@ -159,7 +159,8 @@ function aliaster_search( $matches ) {
 
 			switch ($items[1]) {
 				case 'simple':
-					return $space . $matches[1] . aliaster_create_simple($matches[2], $items[2]) . $matches[3] . $space;
+					$sub = (count($items) == 3) ? $items[2] : null;
+					return $space . $matches[1] . aliaster_create_simple($matches[2], $sub) . $matches[3] . $space;
 				case 'table':
 					return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
 				default:
@@ -200,6 +201,8 @@ function aliaster_create_simple($val, $param) {
             return aliaster_create_simple_all($val);
         case 'num':
             return aliaster_create_simple_num($val);
+		default:
+			return $val;
     }
 }
 
@@ -214,9 +217,6 @@ function aliaster_create_simple_all($val) {
     }
 
 	$len = mb_strlen( $val );
-	if ($param) {
-		$str = $param;
-	}
 	$rslt = "";
 	for ($i = 0; $i < $len; $i++) {
 		$rslt .= $str;
