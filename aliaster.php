@@ -334,7 +334,7 @@ function aliaster_plugin_options() {
 	);
 
 
-	if( $_POST[ $filed_name['submit_hidden'] ] == 'Y' ) {
+	if (array_key_exists($filed_name['submit_hidden'], $_POST) && $_POST[ $filed_name['submit_hidden'] ] == 'Y' ) {
 		$tmp = str_replace('"', "'",  $_POST[ $filed_name['style'] ]);
 		$dels = array('<', '>', '/', '\\');
 		$opt_val['style'] = str_replace($dels, '',  $tmp);
@@ -357,6 +357,11 @@ function aliaster_plugin_options() {
 	}
 	if ($opt_val['out_toggle'] == 1) {
 		$toggle = 'checked="checked"';
+	}
+
+	$s_parag = '';
+	if (array_key_exists('simple_parag', $opt_val)) {
+		$s_parag = $opt_val['simple_parag'];
 	}
 
 $html = <<< EOF
@@ -382,7 +387,7 @@ $html = <<< EOF
 				: <input type="text" name="{$filed_name['simple_num_char']}" value="{$opt_val['simple_num_char']}" size="3" maxlength="1" onchange="als_Onchange()"/>
 			</p>
 			<p>{$filed_title['simple_parag']}
-				: <input type="text" name="{$filed_name['simple_parag']}" value="{$opt_val['simple_parag']}" size="30" maxlength="16" onchange="als_Onchange()"/>
+				: <input type="text" name="{$filed_name['simple_parag']}" value="$s_parag" size="30" maxlength="16" onchange="als_Onchange()"/>
 			</p>
 			<p>{$filed_title['out_space']}
 				: <input type="checkbox" name="{$filed_name['out_space']}" onchange="als_Onchange()" $out_space />
