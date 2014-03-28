@@ -1,10 +1,9 @@
 /**
  * alias.js
  *
- * @package Aliaster
- * @author Gekkai
- * Author URI: http://gekkai.org
+ * Author URI: http://gekkai.org/aliaster/
  * Version: 0.5
+ * Copyright 2014 Gekkai
  */
 function init() {
 	var rslt;

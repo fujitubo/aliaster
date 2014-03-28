@@ -5,7 +5,6 @@ Plugin URI: http://gekkai.org/aliaster/
 Description: This is a plugin to be displayed instead to another arbitrary strings of posts within.
 Version: 0.5
 Author: Gekkai
-Author URI: http://gekkai.org
 License: GPL2
 */
 
