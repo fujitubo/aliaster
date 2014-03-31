@@ -69,7 +69,8 @@ function aliaster_exec( $content ) {
 			// set aliaster_substitute table
 			foreach ( $list as $dt ) {
 				$a = explode( ":", $dt );
-				$aliaster_substitute[$a[0]] = $a[1];
+//				$aliaster_substitute[$a[0]] = $a[1];
+				$aliaster_substitute[ aliaster_dec($a[0]) ] = $a[1];
 			}
 			return "";
 		},
@@ -95,6 +96,16 @@ function aliaster_exec( $content ) {
 
 	// alias proc
 	return aliaster_exec_proc($out_c) . $add_form;
+}
+
+function aliaster_dec($str) {
+	return preg_replace_callback(
+			"|$#(\n+);|",
+			function ( $matches ) {
+				$tbl = array('44' => ',', '58' => ':');
+				return empty($tbl[$matches[1]]) ? $matches[0] : $tbl[$matches[1]];
+			},
+			$str);
 }
 
 function aliaster_exec_proc_parag( $content ) {
@@ -161,8 +172,14 @@ function aliaster_search( $matches ) {
 				case 'simple':
 					$sub = (count($items) == 3) ? $items[2] : null;
 					return $space . $matches[1] . aliaster_create_simple($matches[2], $sub) . $matches[3] . $space;
+
 				case 'table':
-					return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
+					if (empty($aliaster_substitute[$matches[2]])) {
+						return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
+					} else {
+						return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
+					}
+
 				default:
 					return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
 			}

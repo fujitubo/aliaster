@@ -28,6 +28,7 @@ function init() {
 function setAlias() {
 	var ed = tinyMCEPopup.editor;
 	var selval = ed.selection.getContent({format : 'text'});
+	selval = escDec(selval);
 	var r = checkParam(ed, selval);
 	if (!r.code) {
 		return false;
@@ -44,7 +45,8 @@ function setAlias() {
 }
 
 function escDec(str){
-	return str.replace(/[&<>"']/g, function(m){return "&#" + m.charCodeAt(0) + ';'});
+	str = str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+	return str.replace(/[:,]/g, function(m){return "&#" + m.charCodeAt(0) + ';'});
 }
 
 function checkParam(ed, sel) {
