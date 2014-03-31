@@ -92,6 +92,9 @@
 							}
 							param[nl[i].innerHTML] = nl[i].getAttribute('title');
 						}
+						if (nl.length == 0) {
+							param = null;
+						}
 						ed.windowManager.open(
 							{
 								url: url + "/dlg.htm",

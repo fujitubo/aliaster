@@ -4,7 +4,7 @@ Donate link: http://gekkai.org/aliaster/
 Tags: post,page,admin,alias,editor,button
 Requires at least: 3.8
 Tested up to: 3.8
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,6 @@ editor for.
 
 == Changelog ==
 
-= 0.5.0 =
+= 0.6.0 =
 * The first release.
 

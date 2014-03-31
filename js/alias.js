@@ -117,7 +117,7 @@ function cerateSelList(sel) {
 	var keys = tinyMCEPopup.getWindowArg("keys", null);
 	var ed = tinyMCEPopup.editor;
 
-	if (!keys || keys.length == 0) {
+	if (!keys) {
 		sel.style.display="none";
 		return "";
 	}
