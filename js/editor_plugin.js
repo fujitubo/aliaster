@@ -2,7 +2,7 @@
  * editor_plubin.js
  *
  * Author URI: http://gekkai.org/aliaster/
- * Version: 0.5
+ * Version: 0.6.0
  * Copyright 2014 Gekkai
  */
 (function() {
@@ -41,7 +41,7 @@
 						t.clearAlias(ed);
 					} else {
 						t.setAliasContent(ed, "simple");
-						t.addComment(ed);
+//						t.addComment(ed);
 					}
 					t.updateButton(ed);
 				}
@@ -62,7 +62,7 @@
 						t.clearAlias(ed);
 					} else {
 						t.setAliasContent(ed, "simple-num");
-						t.addComment(ed);
+//						t.addComment(ed);
 					}
 					t.updateButton(ed);
 				}
@@ -77,10 +77,21 @@
 			ed.addCommand(
 				'AliasTable',	// コマンドID
 				function() {
+
 					var btn = ed.controlManager.get('AliasTable');
 					if (btn.isActive()) {
 						t.clearAlias(ed);
 					} else {
+						var sel = ed.selection;
+						var node = sel.getNode();
+						var nl = node.ownerDocument.getElementsByClassName("als-table");
+						var param = {};	
+						for (var i = 0; i < nl.length; i++) {
+							if ( nl[i].innerHTML in param ) {
+								continue;
+							}
+							param[nl[i].innerHTML] = nl[i].getAttribute('title');
+						}
 						ed.windowManager.open(
 							{
 								url: url + "/dlg.htm",
@@ -90,12 +101,15 @@
 							},
 							{
 								plugin_url:url,
+								keys: param,
 								onClose: function(){
+/*
 									var node = ed.controlManager.get('als-new');
 									if (node) {
 										ed.selection.select(node);
 										node.setAttribute("id", "");
 									}
+*/
 									t.updateButton(ed);
 								}
 							}
@@ -181,7 +195,8 @@
 			// TEXTノードに置き換える
 			cls = cls.replace(/als-[^\s]+/, '');
 			node.setAttribute('class', cls);
-			node.setAttribute('style', "");
+//			node.setAttribute('style', "");
+			node.removeAttribute('style');
 		},
 
 		setParagAlias : function(ed) {
@@ -211,7 +226,7 @@
 			var style = ed.getParam('als_style');
 			node.setAttribute("style", style);
 
-			this.addComment(ed);
+//			this.addComment(ed);
 
 //			ed.controlManager.setDisabled('AliasParag', true);
 			var btn = ed.controlManager.get('AliasParag');

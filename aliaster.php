@@ -3,7 +3,7 @@
 Plugin Name: Aliaster
 Plugin URI: http://gekkai.org/aliaster/
 Description: This is a plugin to be displayed instead to another arbitrary strings of posts within.
-Version: 0.5
+Version: 0.6.0
 Author: Gekkai
 License: GPL2
 */
@@ -27,7 +27,6 @@ License: GPL2
 	51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-$aliaster_substitute;
 $alister_enable = false;
 
 if ( ! function_exists('aliaster_load_default_opt') ) {
@@ -60,21 +59,9 @@ if ( ! function_exists('aliaster_load_default_opt') ) {
  */
 function aliaster_exec( $content ) {
 	global $alister_enable;
-	$out_c = preg_replace_callback(
-		"|<!-- alias (.*) -->|",
-		function ( $matches ) {
-			global $aliaster_substitute, $alister_enable;
-			$alister_enable = true;
-			$list = explode( ",", $matches[1] );
-			// set aliaster_substitute table
-			foreach ( $list as $dt ) {
-				$a = explode( ":", $dt );
-//				$aliaster_substitute[$a[0]] = $a[1];
-				$aliaster_substitute[ aliaster_dec($a[0]) ] = $a[1];
-			}
-			return "";
-		},
-		$content);
+	if (preg_match('/ class="\s*als-.+?"/', $content)) {
+		$alister_enable = true;
+	}
 
 	$add_form = "";
 	if ($alister_enable && is_user_logged_in()) {
@@ -92,7 +79,7 @@ function aliaster_exec( $content ) {
 	}
 
 	// <p>
-	$out_c = aliaster_exec_proc_parag($out_c);
+	$out_c = aliaster_exec_proc_parag($content);
 
 	// alias proc
 	return aliaster_exec_proc($out_c) . $add_form;
@@ -102,7 +89,7 @@ function aliaster_dec($str) {
 	return preg_replace_callback(
 			"|$#(\n+);|",
 			function ( $matches ) {
-				$tbl = array('44' => ',', '58' => ':');
+				$tbl = array('44' => ',', '58' => ':', '34' => '"', '39' => '\'' );
 				return empty($tbl[$matches[1]]) ? $matches[0] : $tbl[$matches[1]];
 			},
 			$str);
@@ -118,7 +105,6 @@ function aliaster_exec_proc_parag( $content ) {
 }
 
 function aliaster_search_parag( $matches ) {
-	global $aliaster_substitute;
 
     $alst_options = get_option('alst_options');
 	$space = empty($alst_options['out_space']) ? '' : ' ';
@@ -157,7 +143,6 @@ function aliaster_exec_proc( $content ) {
  * matches[3]:end tag
  */
 function aliaster_search( $matches ) {
-	global $aliaster_substitute;
 
     $alst_options = get_option('alst_options');
 	$space = empty($alst_options['out_space']) ? '' : ' ';
@@ -174,10 +159,17 @@ function aliaster_search( $matches ) {
 					return $space . $matches[1] . aliaster_create_simple($matches[2], $sub) . $matches[3] . $space;
 
 				case 'table':
-					if (empty($aliaster_substitute[$matches[2]])) {
-						return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
+					if (preg_match("/ title=\"(.+?)\"/", $matches[1], $mtb) ) {
+						// delete title
+						$stag = preg_replace_callback(
+							"/ title=\"(.+?)\"/",
+							function ( $m ) {
+								return "";
+							},
+							$matches[1]);
+						return $space . $stag . aliaster_dec($mtb[1]) . $matches[3] . $space;
 					} else {
-						return $space . $matches[1] . $aliaster_substitute[$matches[2]] . $matches[3] . $space;
+						return $matches[1] . aliaster_exec_proc( $matches[2] . "</span>" );
 					}
 
 				default:
