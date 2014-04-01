@@ -1,6 +1,6 @@
 === Aliaster ===
 Contributors: fujitubo gekkai
-Donate link: http://gekkai.org/aliaster/
+Plugin URI: http://gekkai.org/aliaster/
 Tags: post,page,admin,alias,editor,button
 Requires at least: 3.8
 Tested up to: 3.8
